@@ -27,7 +27,7 @@ Clone the Linux kernel source code from [Linux Kernel Archives](https://www.kern
 Before compiling, you need to install some packages. Details on this can also be found in the [Linux Kernel Archives](https://www.kernel.org/) website, in the Documentation section. [There is a list of packages](https://docs.kernel.org/process/changes.html#current-minimal-requirements) that needs to be installed for compiling the kernel there.
 
 ```bash
-sudo apt install binutils flex bison util-linux kmod e2fsprogs jfsutils reiserfsprogs xfsprogs squashfs-tools btrfs-progs pcmciautils quota ppp nfs-kernel-server nfs-common procps oprofile udev grub2-common iptables openssl libssl-dev bc
+sudo apt install binutils flex bison util-linux kmod e2fsprogs jfsutils reiserfsprogs xfsprogs squashfs-tools btrfs-progs pcmciautils quota ppp nfs-kernel-server nfs-common procps oprofile udev grub2-common iptables openssl libssl-dev bc libelf-dev
 sudo apt install cpio xmlto sphinx-common perl tar xz-utils
 ```
 
@@ -52,5 +52,10 @@ cp /boot/config-$(uname -r) .config
 After we get the `*.config`, we can edit it with `make menuconfig`. It will give you text-based tool to edit all your options. Or you can also use `make xconfig`.
 
 Note that we downloaded the kernel version `5.16`, but the `*.config` that we get from our local machine is in different version. You can check the kernel version you are currently running on your machine with the command `uname -a`. So some options might have changed, and some options might not have any entries, and you will probably get error. So what you need to do is first update the current kernel file you just generated to the newest one. You can do this with the command `make oldconfig`. It will ask you about the new options with have been added in the newest version of the kernel.
+
+After that you can start compiling the kernel with the command:
+`make -j$(nproc)`
+
+
 
 
