@@ -27,8 +27,15 @@ Clone the Linux kernel source code from [Linux Kernel Archives](https://www.kern
 Before compiling, you need to install some packages. Details on this can also be found in the [Linux Kernel Archives](https://www.kernel.org/) website, in the Documentation section. [There is a list of packages](https://docs.kernel.org/process/changes.html#current-minimal-requirements) that needs to be installed for compiling the kernel there.
 
 ```bash
-sudo apt install inutils flex bison util-linux kmod e2fsprogs jfsutils reiserfsprogs xfsprogs squashfs-tools btrfs-progs pcmciautils quota ppp nfs-kernel-server nfs-common procps oprofile udev grub2-common iptables openssl libssl-dev bc libelf-dev
-sudo apt install cpio xmlto sphinx-common perl tar xz-utils
+sudo apt install binutils flex bison util-linux \
+                 kmod e2fsprogs jfsutils reiserfsprogs \
+                 xfsprogs squashfs-tools btrfs-progs \
+                 pcmciautils quota ppp nfs-kernel-server \
+                 nfs-common procps oprofile udev \
+                 grub2-common iptables openssl \
+                 libssl-dev bc libelf-dev dwarves
+sudo apt install cpio xmlto sphinx-common \
+                 perl tar xz-utils
 ```
 
 ### Step 3: Generating the Kernel Config File
@@ -72,7 +79,7 @@ Some additional notes up till this point. I personally faced some miscellanous i
 # https://stackoverflow.com/a/64462989https://stackoverflow.com/a/64462989
 
 make V=1 all -j$(nproc)
-sudo make modules
+make modules
 sudo make modules_install
 
 # If you have this error: No rule to make target 'debian/canonical-certs.pem', needed by 'certs/x509_certificate_list'
@@ -85,7 +92,5 @@ sudo make modules_install
 # scripts/config --disable SYSTEM_REVOCATION_KEYS
 # Discussion thread: https://askubuntu.com/q/1362455
 ```
-
-
 
 
