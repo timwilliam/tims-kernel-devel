@@ -64,33 +64,93 @@ Note that we downloaded the kernel version `5.16`, but the `*.config` that we ge
 
 ### Step 4: Compiling the Kernel
 
-After that you can start compiling the kernel with the command`make -j$(nproc)`. If your compilation fails, it is very likely that you are just missing some packages. So try to install it and compile again. If you compilation fails, **don't rerun** the `make` command. Instead, reset first by using the command `make mrproper`. Note that this will also delete your `.config` file, so remember to make a backup.
-
-After a successful compilation, we run the command `sudo make modules_install`. 
-
-Some additional notes up till this point. I personally faced some miscellanous issues when following the step as described in the video, below is what I personally run and resulted in a success.
+After that you can start compiling the kernel. If your compilation fails, it is very likely that you are just missing some packages. So try to install it and compile again. If you compilation fails, **don't rerun** the `make` command. Instead, reset first by using the command `make mrproper`. Note that this will also delete your `.config` file, so remember to make a backup.
 
 ```bash
-# In the .config file, I have to change the following
+# If you faced some error with CONFIG_X86_X32, change # to renamethe following:
 # CONFIG_X86_X32=N
 # CONFIG_SYSTEM_TRUSTED_KEYS=""
 
-# According to this thread, you should run the following before install
-# https://stackoverflow.com/a/64462989https://stackoverflow.com/a/64462989
-
+# Step 1:
 make V=1 all -j$(nproc)
-make modules
-sudo make modules_install
 
+# Step 2: Generate the modules and install them
 # If you have this error: No rule to make target 'debian/canonical-certs.pem', needed by 'certs/x509_certificate_list'
 # Use one of the below
 # scripts/config --disable SYSTEM_TRUSTED_KEYS
 # scripts/config --set-str SYSTEM_TRUSTED_KEYS "" # alternative
 # Discussion thread: https://askubuntu.com/a/1329625
-
 # If you have this error: No rule to make target 'debian/canonical-revoked-certs.pem' , needed by certs/x509_revocation_list'
 # scripts/config --disable SYSTEM_REVOCATION_KEYS
 # Discussion thread: https://askubuntu.com/q/1362455
+make modules
+sudo make modules_install
+
+# Step 3: Install the kernel
+sudo make install
+
+
+# Step 4: Check if everything is installed correctly
+make kernelversion # to check kernel version
+sudo cp /boot/vmlinuz /boot/vmlinux-$(make kernelversion)-$(uname -m) # rename the newly generated kernel with the current kernel version
 ```
+
+### Step 5: Update the Bootloader with the new Kernel
+
+Add a custom menu entry Grub
+
+```bash
+sudo vim /etc/grub.d/40_custom
+```
+
+Add a new entry for the newly compiled kernel. You can get the default menuentry with the `sudo cat /boot/grub/grub.cfg` and then update it to suit your need. An example for this is what written below.
+
+```bash
+#!/bin/sh
+exec tail -n +3 $0
+# This file provides an easy way to add custom menu entries.  Simply type the
+# menu entries you want to add after this comment.  Be careful not to change
+# the 'exec tail' line above.
+
+menuentry 'Tim Ubuntu, with Linux 5.17.0-rc1' --class ubuntu --class gnu-linux --class gnu --class os >                recordfail
+                load_video
+                gfxmode $linux_gfx_mode
+                insmod gzio
+                if [ x$grub_platform = xxen ]; then insmod xzio; insmod lzopio; fi
+                #insmod part_gpt
+                #insmod ext2
+                set root='hd0,gpt6'
+                if [ x$feature_platform_search_hint = xy ]; then
+                  search --no-floppy --fs-uuid --set=root --hint-bios=hd0,gpt6 --hint-efi=hd0,gpt6 --h>
+                else
+                  search --no-floppy --fs-uuid --set=root 18b46609-5be9-47ee-86fd-462a45d779cc
+                fi
+                echo    'Loading Linux 5.17.0-rc1 ...'
+                linux   /vmlinux-5.17.0-rc1-x86_64 root=UUID=e7efb94c-2afd-4244-827b-ab9766cef225 ro
+                #echo    'Loading initial ramdisk ...'
+                #initrd  /initrd.img-5.11.0-49-generic
+}
+```
+
+Add a timeout for Grub to show the menuentry
+
+```bash
+# Open the grub file
+sudo vim /etc/default/grub
+
+# Then do the following
+# 1: Comment out the line with GRUB_TIMEOUT_STYLE=hidden
+# 2: Set the timeout to 5 seconds, GRUB_TIMEOUT=5
+```
+
+
+
+Finally, update grub with
+
+```bash
+sudo update-grub
+```
+
+Then you can reboot your machine and select the new menuentry you just created.
 
 
