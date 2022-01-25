@@ -95,7 +95,7 @@ make kernelversion # to check kernel version
 sudo cp /boot/vmlinuz /boot/vmlinux-$(make kernelversion)-$(uname -m) # rename the newly generated kernel with the current kernel version
 ```
 
-### Step 5: Update the Bootloader with the new Kernel
+### Step 5: Update Grub boot loader with the new Kernel and boot
 
 Add a custom menu entry Grub
 
@@ -103,7 +103,7 @@ Add a custom menu entry Grub
 sudo vim /etc/grub.d/40_custom
 ```
 
-Add a new entry for the newly compiled kernel. You can get the default menuentry with the `sudo cat /boot/grub/grub.cfg` and then update it to suit your need. An example for this is what written below.
+Add a new entry for the newly compiled kernel. You can get the default menuentry with the `sudo cat /boot/grub/grub.cfg` and then update with the kernel version yu just compiled before.
 
 ```bash
 #!/bin/sh
@@ -112,23 +112,24 @@ exec tail -n +3 $0
 # menu entries you want to add after this comment.  Be careful not to change
 # the 'exec tail' line above.
 
-menuentry 'Tim Ubuntu, with Linux 5.17.0-rc1' --class ubuntu --class gnu-linux --class gnu --class os >                recordfail
+menuentry 'Tim Ubuntu, with Linux 5.17.0-rc1' --class ubuntu --class gnu-linux --class gnu --class os {
+                recordfail
                 load_video
                 gfxmode $linux_gfx_mode
                 insmod gzio
                 if [ x$grub_platform = xxen ]; then insmod xzio; insmod lzopio; fi
-                #insmod part_gpt
-                #insmod ext2
+                insmod part_gpt
+                insmod ext2
                 set root='hd0,gpt6'
                 if [ x$feature_platform_search_hint = xy ]; then
-                  search --no-floppy --fs-uuid --set=root --hint-bios=hd0,gpt6 --hint-efi=hd0,gpt6 --h>
+                  search --no-floppy --fs-uuid --set=root --hint-bios=hd0,gpt6 --hint-efi=hd0,gpt6 --hint-baremetal=ahci0,gpt6  18b46609-5be9-47ee-86fd-462a45d779cc
                 else
                   search --no-floppy --fs-uuid --set=root 18b46609-5be9-47ee-86fd-462a45d779cc
                 fi
                 echo    'Loading Linux 5.17.0-rc1 ...'
                 linux   /vmlinux-5.17.0-rc1-x86_64 root=UUID=e7efb94c-2afd-4244-827b-ab9766cef225 ro
-                #echo    'Loading initial ramdisk ...'
-                #initrd  /initrd.img-5.11.0-49-generic
+                echo    'Loading initial ramdisk ...'
+                initrd  /initrd.img-5.17.0-rc1+
 }
 ```
 
@@ -143,8 +144,6 @@ sudo vim /etc/default/grub
 # 2: Set the timeout to 5 seconds, GRUB_TIMEOUT=5
 ```
 
-
-
 Finally, update grub with
 
 ```bash
@@ -152,5 +151,16 @@ sudo update-grub
 ```
 
 Then you can reboot your machine and select the new menuentry you just created.
+
+Extra note, if you somehow need to update the UUID of the drive, you can use either of the following commands to get the UUID and mount point information.
+
+```bash
+cat /etc/mtab
+sudo fdisk -l
+sudo blkid
+df -H
+```
+
+Congratulations you have booted to your OS with the kernel that you just compiled! You can validate this by running `uname -a` when you logged in and you can see that it outputs the kernel version that you just compiled!
 
 
