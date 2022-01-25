@@ -1,0 +1,1 @@
+cmd_/home/tim/devel/tims-kernel-devel/hellokernel/Module.symvers := sed 's/\.ko$$/\.o/' /home/tim/devel/tims-kernel-devel/hellokernel/modules.order | scripts/mod/modpost -m -a  -o /home/tim/devel/tims-kernel-devel/hellokernel/Module.symvers -e -i Module.symvers   -T -
