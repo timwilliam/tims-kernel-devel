@@ -1,1 +1,0 @@
-cmd_/home/tim/devel/tims-kernel-devel/hellokernel/hellokernel.mod := { echo  /home/tim/devel/tims-kernel-devel/hellokernel/hellokernel.o;  echo; } > /home/tim/devel/tims-kernel-devel/hellokernel/hellokernel.mod

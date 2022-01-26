@@ -1,1 +1,0 @@
-cmd_/home/tim/devel/tims-kernel-devel/hellokernel/hellokernel.ko := ld -r -m elf_x86_64 --build-id=sha1  -T scripts/module.lds -o /home/tim/devel/tims-kernel-devel/hellokernel/hellokernel.ko /home/tim/devel/tims-kernel-devel/hellokernel/hellokernel.o /home/tim/devel/tims-kernel-devel/hellokernel/hellokernel.mod.o;  true
