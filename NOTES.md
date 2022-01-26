@@ -22,6 +22,16 @@ Clone the Linux kernel source code from [Linux Kernel Archives](https://www.kern
 
 - After cloning, you can open the kernel code using an IDE and make changes. The file is quite big so it can take a while to load into the IDE. You can use VS Code or KDevelop to edit the kernel code. You can start from around line 800, where you have the function `start_kernel()`.
 
+Upon compilation, I face some issues where the storage partition that I set for the VM is not large enough and cause *insufficient space error*. So, I created a VM with the following disk configuration. Note that I make each partition quite big since I have sme free space in my drive and to just avoid and *insufficient space error*.
+
+```bash
+/        32G # used around 14G after kernel compilation
+/boot    16G # used around 1.3G after kernel compilation
+/home    46G # used around 26G after kernel compilation
+/var     12G # used around 0.9G after kernel compilation
+/tmp     12G # used around 0.1G after kernel compilation
+```
+
 ### Step 2: Package Installation for Kernel Compilation
 
 Before compiling, you need to install some packages. Details on this can also be found in the [Linux Kernel Archives](https://www.kernel.org/) website, in the Documentation section. [There is a list of packages](https://docs.kernel.org/process/changes.html#current-minimal-requirements) that needs to be installed for compiling the kernel there.
@@ -297,5 +307,3 @@ Then you can try to load the kernel with `modprobe` and it will work
 ```bash
 sudo modprobe hellokernel
 ```
-
-
