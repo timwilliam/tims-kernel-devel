@@ -15,21 +15,29 @@ Clone the Linux kernel source code from [Linux Kernel Archives](https://www.kern
 - To get the `git clone` link, click the `browse` button on the kernel version of your liking
 
 - Copy the git tree link on top of the page, it should look something like this:
-  `https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/`
+  
+  ```bash
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/
+  ```
 
 - Then you can just `git clone` as follows:
-  `git clone https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/`
+  
+  ```bash
+  git clone https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/
+  ```
 
 - After cloning, you can open the kernel code using an IDE and make changes. The file is quite big so it can take a while to load into the IDE. You can use VS Code or KDevelop to edit the kernel code. You can start from around line 800, where you have the function `start_kernel()`.
 
 Upon compilation, I face some issues where the storage partition that I set for the VM is not large enough and cause *insufficient space error*. So, I created a VM with the following disk configuration. Note that I make each partition quite big since I have sme free space in my drive and to just avoid and *insufficient space error*.
 
 ```bash
-/        32G # used around 14G after kernel compilation
-/boot    16G # used around 1.3G after kernel compilation
-/home    46G # used around 26G after kernel compilation
-/var     12G # used around 0.9G after kernel compilation
-/tmp     12G # used around 0.1G after kernel compilation
+/        30G # used around 14G after kernel compilation
+/boot    10G # used around 1.3G after kernel compilation
+/home    40G # used around 26G after kernel compilation
+/var     10G # used around 0.9G after kernel compilation
+/tmp     10G # used around 0.1G after kernel compilation
+
+# in total, I used 100GB of disk space for the partitions
 ```
 
 ### Step 2: Package Installation for Kernel Compilation
@@ -43,8 +51,8 @@ sudo apt install binutils flex bison util-linux \
                  pcmciautils quota ppp nfs-kernel-server \
                  nfs-common procps oprofile udev \
                  grub2-common iptables openssl \
-                 libssl-dev bc libelf-dev dwarves
-sudo apt install cpio xmlto sphinx-common \
+                 libssl-dev bc libelf-dev dwarves \
+                 cpio xmlto sphinx-common \
                  perl tar xz-utils
 ```
 
@@ -58,7 +66,7 @@ The best option might be to take the default value from the distribution that yo
 
 ```bash
 # cd to your kernel directory
-cd /home/tim/devel/myKernel
+cd /devel/linux
 
 # location my vary, you can find it in any one of these:
 # /proc/config.gz # you can use zcat for this, e.g.: zcat /proc/config.gz > .config
@@ -98,7 +106,6 @@ sudo make modules_install
 
 # Step 3: Install the kernel
 sudo make install
-
 
 # Step 4: Check if everything is installed correctly
 make kernelversion # to check kernel version
