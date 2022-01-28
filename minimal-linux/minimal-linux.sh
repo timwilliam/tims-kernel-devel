@@ -6,12 +6,12 @@ BUSYBOX_VERSION=1.35.0
 mkdir -p src
 cd src
     # get the linux kernel, and then compile it
-    KERNEL_MAJOR=$(echo $KERNEL_VERSION | sed 's/\([0-9]*\)[^0-9].*/\1/'
-    wget https://mirrors.edge.kernel.org/pub/linux/kernel/v$KERNEL_MAJOR.x/patch-$KERNEL_VERSION.xz
+    KERNEL_MAJOR=$(echo $KERNEL_VERSION | sed 's/\([0-9]*\)[^0-9].*/\1/')
+    wget https://mirrors.edge.kernel.org/pub/linux/kernel/v$KERNEL_MAJOR.x/linux-$KERNEL_VERSION.xz
     tar -xf linux-$KERNEL_VERSION.tar.xz
     cd linux-$KERNEL_VERSION
         make defconfig
-        make -j($nproc) || exit
+        make -j$(nproc) || exit
     cd ..
 
     # get busybox, and then build it
@@ -20,7 +20,7 @@ cd src
     cd busybox-$BUSYBOX_VERSION
         make defconfig
         sed 's/^.*CONFIG_STATIC[^_].*$/CONFIG_STATIC=y/g' -i .config
-        make -j($nproc) || exit
+        make -j$(nproc) || exit
     cd ..
 cd ..
 
