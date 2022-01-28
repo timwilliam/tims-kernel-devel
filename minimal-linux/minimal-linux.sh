@@ -53,6 +53,7 @@ cd initrd
 cd ..
 
 # to run using qemu
+# sudo apt install -y qemu-system-x86_64
 # qemu-system-x86_64 -kernel bzImage -initrd initrd.img
 
 # to run inside your current terminal using serial interface (communicate with stdin and stdout)
