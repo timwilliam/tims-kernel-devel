@@ -15,8 +15,8 @@ cd src
     cd ..
 
     # get busybox, and then build it
-    wget https://busybox.net/downloads/busybox-$BUSYBOX_VERSIONs.tar.bz2
-    tar -xf busybox-$BUSYBOX_VERSIONs.tar.bz2
+    wget https://busybox.net/downloads/busybox-$BUSYBOX_VERSION.tar.bz2
+    tar -xf busybox-$BUSYBOX_VERSION.tar.bz2
     cd busybox-$BUSYBOX_VERSION
         make defconfig
         sed 's/^.*CONFIG_STATIC[^_].*$/CONFIG_STATIC=y/g' -i .config
@@ -24,7 +24,7 @@ cd src
     cd ..
 cd ..
 
-cp /src/linux-$KERNEL_VERSION/x86_64/boot/bzimage ./
+cp /src/linux-$KERNEL_VERSION/arch/x86_64/boot/bzimage ./
 
 mkdir initrd
 cd initrd
