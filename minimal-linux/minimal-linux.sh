@@ -7,7 +7,7 @@ mkdir -p src
 cd src
     # get the linux kernel, and then compile it
     KERNEL_MAJOR=$(echo $KERNEL_VERSION | sed 's/\([0-9]*\)[^0-9].*/\1/')
-    wget https://mirrors.edge.kernel.org/pub/linux/kernel/v$KERNEL_MAJOR.x/linux-$KERNEL_VERSION.xz
+    wget https://mirrors.edge.kernel.org/pub/linux/kernel/v$KERNEL_MAJOR.x/linux-$KERNEL_VERSION.tar.xz
     tar -xf linux-$KERNEL_VERSION.tar.xz
     cd linux-$KERNEL_VERSION
         make defconfig
