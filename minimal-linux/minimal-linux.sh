@@ -24,7 +24,7 @@ cd src
     cd ..
 cd ..
 
-cp /src/linux-$KERNEL_VERSION/arch/x86_64/boot/bzimage ./
+cp ./src/linux-$KERNEL_VERSION/arch/x86_64/boot/bzimage ./
 
 mkdir initrd
 cd initrd
