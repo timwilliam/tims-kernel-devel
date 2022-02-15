@@ -2,6 +2,10 @@
 #include <linux/gpio.h>
 #include <linux/delay.h> // for timing and stuff
 
+#include <linux/fs.h> // for file system
+#include <linux/cdev.h> // for character device
+#include <linux/io.h> // for input output
+
 // set gpio_pin as parameter so that we can change it later on
 int gpio_pin = 17;
 module_param(gpio_pin, int, 0);
@@ -79,7 +83,46 @@ void morse(char *str){
     }
 }
 
+static int open_dev(struct inode *node, struct file *f){
+    // you can do checks, or actually connecting to the devicess
+    return 0;
+}
+
+static int close_dev(struct inode *node, struct file *f){
+    // you can do checks, or actually disconnecting to the devicess
+    return 0;
+}
+
+static ssize_t write_dev(struct file *f, const char *buff, size_t len, loff_t *off){
+    unsigned char localbuffer[129];
+    unsigned long rest;
+    
+    // this function returns the number of character left, or the one that it could not copy; so a value of 0 means everything is copied
+    count = copy_from_user(&localbuffer[0], buff, (len < 128) ? len : 128);
+    count = ((len < 128) ? len : 128) - count;
+    localbuffer[count] = '\0';
+    
+    printk("Morse module received data: %s", &localbuffer[0]);
+    
+    morse(&localbuffer[0]);
+    
+    return len;
+}
+
+struct file_operations my_fops = {
+    // pointers to function
+    write: write_dev,
+    open: open_dev,
+    release: close_dev,
+    owner: THIS_MODULE
+};
+
+struct cdev my_cdev;
+dev_t devno;
+
 static int __init init_hellodriver(void){
+    int err;
+
     if(!gpio_is_valid(gpio_pin)){
         printk("Invalid GPIO pin \"%d\"!\n", gpio_pin);
         return -1;
@@ -93,8 +136,25 @@ static int __init init_hellodriver(void){
     // configure gpio_pin as an output pin
     gpio_direction_output(gpio_pin, 0);
 
-    // for testing
+    // for testing, this is actually the default ringtone for Nokia phones when you received an SMS!!!
     // morse("SMS\0");
+    
+    // get major and minor number for devices
+    // $ cat /proc/devices
+    // pick an unused number
+    devno = MKDEV(137, 0);
+    register_chrdev_region(devno, 1, "gpio_morse");
+
+    // associate our function with a character device
+    cdev_init(&my_cdev, &my_fops);
+    my_cdev.owner = THIS_MODULE;
+
+    // give the character device to the kernel, and associate with major and minor number, and create 1 of this object
+    err = cdev_add(&my_cdev, devno, 1);
+    if(err < 0){
+        printk("Error when adding device!");
+        return -1;
+    }
 
     return 0;
 }
@@ -102,6 +162,8 @@ static int __init init_hellodriver(void){
 static void __exit cleanup_hellodriver(void){
     gpio_set_value(gpio_pin, 0);
     gpio_free(gpio_pin);
+    
+    unregister_chrdev_region(devno, 1);
 }
 
 module_init(init_hellodriver);
