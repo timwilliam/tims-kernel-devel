@@ -95,7 +95,7 @@ static int close_dev(struct inode *node, struct file *f){
 
 static ssize_t write_dev(struct file *f, const char *buff, size_t len, loff_t *off){
     unsigned char localbuffer[129];
-    unsigned long rest;
+    unsigned long count;
     
     // this function returns the number of character left, or the one that it could not copy; so a value of 0 means everything is copied
     count = copy_from_user(&localbuffer[0], buff, (len < 128) ? len : 128);
