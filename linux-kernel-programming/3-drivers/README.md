@@ -2,11 +2,29 @@
 
 This video teaches you how to create a simple driver module that allows the userspace to interact with underling hardware.
 
+Video Link:
+
+- [Linux Kernel Programming 02.5: Preparations - YouTube](https://youtu.be/ivPZwIqsP84)
+
+- [Linux Kernel Programming 03: Drivers - YouTube](https://youtu.be/catF6dSSzag)
+
 ## Step 1: Prepare the hardware
+
+We will be using a RaspberryPi for simulating a device, capable to control external hardware attached to it. In My case, I am using a RaspberryPi 1 Model B.
+
+First we will need to compile our own kernel for the Raspberry Pi. You can follow the official tutorial made available in the link below. Note that this takes about 1 days of building for the RaspberryPi I'm using.
+
+- [Raspberry Pi Documentation - The Linux kernel](https://www.raspberrypi.com/documentation/computers/linux_kernel.html#building-the-kernel)
+
+After that, we can attach the hardware to the RaspberryPi. We will need a breadboard, a small buzzer, a 220Ω resistor, and some jumper cables. Simply connect the small buzzer and 220Ω in series on the breadboard, and plug it to GPIO17 (this is the pin we pick for the example) of the RaspberryPi. I don't have the schematic but below is a screenshot from the video tutorial of how this will look like on the breadboard.
+
+![MarineGEO circle logo](C:\Users\Tim\Desktop\wsl\devel\tims-kernel-devel\linux-kernel-programming\3-drivers\hardware-setup.PNG "MarineGEO logo")
+
+Then, we are ready to move on to the next step in the video tutorial.
 
 ## Step 2: Compile the driver code
 
-Compiing the driver code can be run with the following command:
+Compiling the driver code can be run with the following command:
 
 ```bash
 make -C /lib/modules/$(uname -r)/build "M=$PWD"
@@ -40,5 +58,3 @@ sudo rmmod hellodriver
 # remove the device
 sudo rm /dev/gpio_morse
 ```
-
-
