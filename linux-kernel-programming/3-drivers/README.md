@@ -18,7 +18,7 @@ First we will need to compile our own kernel for the Raspberry Pi. You can follo
 
 After that, we can attach the hardware to the RaspberryPi. We will need a breadboard, a small buzzer, a 220Ω resistor, and some jumper cables. Simply connect the small buzzer and 220Ω in series on the breadboard, and plug it to GPIO17 (this is the pin we pick for the example) of the RaspberryPi. I don't have the schematic but below is a screenshot from the video tutorial of how this will look like on the breadboard.
 
-![Hardware Setup](hardware-setup.png "Hardware Setup")
+![Hardware Setup](hardware-setup.PNG "Hardware Setup")
 
 Then, we are ready to move on to the next step in the video tutorial.
 
