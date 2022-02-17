@@ -2,6 +2,10 @@
 
 This video teaches you how to create a simple kernel module and run it on your system.
 
+Video Link:
+
+- [Linux Kernel Programming 02: Kernel Modules - YouTube](https://youtu.be/1cPpU966aJ0)
+
 ### Step 1: Install Kernel headers
 
 Drivers are also part of Kernel modules. To write a kernel modules, we will need to have the header files for your kernel. If you have compiled your own Kernel, then you don't have to install the headers. But in case you need to, you can install it with the following with:

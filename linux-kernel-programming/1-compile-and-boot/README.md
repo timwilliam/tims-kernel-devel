@@ -2,6 +2,10 @@
 
 This video teaches you how to compile your own kernel.
 
+Video Link:
+
+- [Linux Kernel Programming 01: Compile and Boot - YouTube](https://youtu.be/WiZ05pnHZqM)
+
 ### Step 1: Preparation
 
 Clone the Linux kernel source code from [Linux Kernel Archives](https://www.kernel.org/)
